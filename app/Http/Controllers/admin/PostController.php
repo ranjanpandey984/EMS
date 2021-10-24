@@ -65,19 +65,18 @@ class PostController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('S.no', 'Post ID', 'Post Name', 'Max Count');
+        $columns = array('Post ID', 'Post Name', 'Max Count');
 
         $callback = function() use($posts, $columns) {
             $file = fopen('php://output', 'w');
             fputcsv($file, $columns);
 
             foreach ($posts as $key=>$post) {
-                $row['S.no']  = $key+1;
                 $row['Post ID']  = $post->id;
                 $row['Post Name']    = $post->post_name;
                 $row['Max Count']    = $post->max_count;
 
-                fputcsv($file, array($row['S.no'], $row['Post ID'], $row['Post Name'], $row['Max Count']));
+                fputcsv($file, array($row['Post ID'], $row['Post Name'], $row['Max Count']));
             }
 
             fclose($file);

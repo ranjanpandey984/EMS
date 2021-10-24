@@ -101,24 +101,24 @@ class CandidateController extends Controller
 
     public function export(Request $req)
     {
-        $fileName = 'candidates.csv';
+        $fileName = 'candidates.csv'; 
         $candidates = Candidate::all();
-     $posts = Post::all(); 
-        $candidatedata = DB::table('candidates')->selectRaw('count(id) as candidate_count, post_id')->groupBy('post_id')->get();
+        $posts = Post::all(); 
+        $candidatedata = DB::table('candidates')->selectRaw('count(candidates.id) as candidate_count, posts.max_count, post_id')->join('posts', 'candidates.post_id', '=', 'posts.id')->groupBy('post_id')->get();
         foreach ($posts as $post)
         {
             foreach($candidatedata as $candidatedatum){
-                if($candidatedatum->candidate_count >= $post->max_count)
+                if($candidatedatum->candidate_count >= $candidatedatum->max_count)
                 {
                     $headers = array(
                     "Content-type"        => "text/csv",
-                    "Content-Disposition" => "attachment; filename=$fileName",
+                    "Content-Disposition" => "attachment;filename=$fileName",
                     "Pragma"              => "no-cache",
                     "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
                     "Expires"             => "0"
                     );
 
-                    $columns = array('S.no', 'Candidate ID', 'Post Name','Photo Id', 'Nepali Name', 'English Name','Photo');
+                    $columns = array('Candidate ID', 'Post Name','Photo Id', 'Nepali Name', 'English Name','Photo');
 
                     $callback = function() use($candidates, $columns) {
                         $file = fopen('php://output', 'w');
@@ -129,7 +129,6 @@ class CandidateController extends Controller
                             $pid = sprintf("%02d",$candidate['post_id']);
                             $canid = sprintf("%03d",$candidate['id']);
 
-                            $row['S.no']  = $key+1;
                             $row['Candidate ID']  = $candidate->id;
                             $row['Post Name']    = $candidate->getPosts->post_name;
                             $row['Photo Id'] = $pid.$canid.".png";
@@ -137,7 +136,7 @@ class CandidateController extends Controller
                             $row['English Name']  = $candidate->english_name;
                             $row['Photo']  = $candidate->image;
 
-                            fputcsv($file, array($row['S.no'], $row['Candidate ID'], $row['Post Name'],$row['Photo Id'], $row['Nepali Name'],$row['English Name'],$row['Photo']));
+                            fputcsv($file, array($row['Candidate ID'], $row['Post Name'],$row['Photo Id'], $row['Nepali Name'],$row['English Name'],$row['Photo']));
                         }
 
                         fclose($file);
