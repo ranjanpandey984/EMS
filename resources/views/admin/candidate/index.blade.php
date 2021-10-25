@@ -35,6 +35,7 @@
                 <div class="right">
                    <button class="btn btn-warning" onclick="window.location.href = '{{ route('admin.candidate.createview') }}';"><i class="fas fa-plus-square fa-2x mr-2"></i><span style="vertical-align: super;">Add New Candidate</span></a> </button>
                     <span data-href="exportdata" id="export" class="btn btn-success " onclick="exportTasks(event.target);" style="padding: 11px;">Export Data</span>
+                    <span data-href="exportimg" id="export" class="btn btn-danger " onclick="exportTasks(event.target);" style="padding: 11px;">Export Image</span>
                 </div>
             
             

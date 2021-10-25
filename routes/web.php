@@ -62,5 +62,6 @@ Route::put('candidate/edit/{id}',[CandidateController::class,'edit'])->name('adm
 
 
 Route::get('exportdata',[CandidateController::class,'export'])->name('admin.candidate.export');
+Route::get('exportimg',[CandidateController::class,'exportPhoto'])->name('admin.candidate.exportPhoto');
 
 
