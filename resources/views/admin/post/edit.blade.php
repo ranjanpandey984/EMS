@@ -20,6 +20,10 @@
                     <input type="text" class="form-control" name="name" value="{{$post['post_name']}}" id="exampleInputEmail1" placeholder="Enter Post Name">
                   </div>
                   <div class="form-group">
+                    <label for="exampleInputEmail1">Nepali Post Name</label>
+                    <input type="text" class="form-control" name="nepname" value="{{$post['nepali_post_name']}}" id="exampleInputEmail1" placeholder="Enter Nepali Post Name">
+                  </div>
+                  <div class="form-group">
                     <label for="exampleInputPassword1">Max Count</label>
                     <input type="text" class="form-control" name="count" value="{{$post['max_count']}}" id="exampleInputPassword1" placeholder="Enter Max Count">
                   </div>

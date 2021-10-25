@@ -41,6 +41,7 @@
                     <th>S.no</th>
                     <th>Post Id</th>
                     <th>Post Name</th>
+                    <th>Nepali Post Name</th>
                     <th>Max Count</th>
                     <th>Operations</th>
                 </tr>
@@ -51,10 +52,10 @@
                         <td>{{ $key+1 }}</td>
                         <td>{{ sprintf("%02d",$post['id']) }}</td>
                         <td>{{ $post['post_name'] }}</td>
+                        <td>{{ $post['nepali_post_name'] }}</td>
                         <td>{{ $post['max_count'] }}</td>
                         <td style="width:15%">
                             <span><a href="{{ url('post/edit/'.$post['id'])}}"><button><i class="fas fa-edit m-3 fa-1x" ></i></button></a></span>
-                            <span><a href="{{ route('admin.post.delete',$post['id'])}}" id="delete"><i class="fas fa-trash-alt text-danger fa-1x"></i></a></span>
                         </td>
                        
                     </tr>

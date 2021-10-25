@@ -16,6 +16,7 @@ class CandidateController extends Controller
     public function index()
     {
         $candidates = Candidate::all();
+        $posts = Post::all();
         return view('admin.candidate.index',compact('candidates'));
     }
 
@@ -29,29 +30,31 @@ class CandidateController extends Controller
 
     public function create(Request $req)
     {
-        $postid = Post::find($req->input('postname'))->id;
+        // $postid = Post::find($req->input('postname'))->id;
 
-
-        $candidate = new Candidate;
-        $candidate['post_id'] = $postid;
+        
+        $createid = Candidate::where('post_id',$req->postname)->orderBy('id', 'DESC')->first();
+        if(isset($createid)){
+            $candidate['cant_id']=$createid->cant_id+1;
+        }else{
+            $candidate['cant_id']=1;
+        }
+        $candidate['post_id'] = $req->postname;
         $candidate['nepali_name'] = $req->input('nepname');
         $candidate['english_name'] = $req->input('engname');
-        $candidate->save();
-
-        $pid = sprintf("%02d",$postid);
-        $canid = sprintf("%03d",$candidate['id']);
-
-        $latestid = $candidate->id;
-        $findid = Candidate::find($latestid);
+       $candidate['candidate_id'] =sprintf("%02s",$candidate['post_id']).sprintf("%03s",$candidate['cant_id']);
 
         if ($req->hasFile('photo')) {
             $file = $req->file('photo');
-            $image_one = $pid.$canid.".png";
+            $image_one = $candidate['candidate_id'].".png";
             $filename = 'uploads/'.$image_one;
-            $image = Image::make($file)->resize(600,600)->save($filename);
-            $findid->image = $filename;       
+            $image = Image::make($file)->resize(200,240)->save($filename);
+            $candidate['image'] = $filename;       
         }
-        $findid->save();
+
+        
+
+        Candidate::create($candidate);
         $data = $req->input('nepname');
         $req->session()->flash('name',$data);
         return redirect(route('admin.candidate.index'));
@@ -87,7 +90,7 @@ class CandidateController extends Controller
             $file = $req->file('photo');
             $image_one = $pid.$canid.".png";
             $filename = 'uploads/'.$image_one;
-            $image = Image::make($file)->resize(600,600)->save($filename);
+            $image = Image::make($file)->resize(200,240)->save($filename);
             $candidate->image = $filename;       
         }
 
@@ -104,53 +107,51 @@ class CandidateController extends Controller
     {
         $fileName = 'candidates.csv'; 
         $candidates = Candidate::all();
-        $candidatedata = DB::table('candidates')->selectRaw('count(candidates.id) as candidate_count, posts.max_count, post_id')->join('posts', 'candidates.post_id', '=', 'posts.id')->groupBy('post_id')->get();
-       
+        $candidatedata = DB::table('posts')->selectRaw('count(candidates.id) as candidate_count, posts.max_count, posts.id')->leftjoin('candidates', 'candidates.post_id', '=', 'posts.id')->groupBy('post_id')->get();
+    // dd($candidatedata);
+        $post=Post::pluck('max_count','id');
+    //  dd($post);
+
         $count = 0;   
             foreach($candidatedata as $candidatedatum){
-               
-                if($candidatedatum->candidate_count >= $candidatedatum->max_count)
-                {
+                if($candidatedatum->candidate_count >= $candidatedatum->max_count )
+                {   
                     $count++;
-                    
                 if($count == sizeof($candidatedata)) {
                     $headers = array(
-                        "Content-type"        => "textl/csv",
+                        "Content-type"        => "text/csv",
                         "Content-Disposition" => "attachment;filename=$fileName",
                         "Pragma"              => "no-cache",
                         "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
                         "Expires"             => "0"
                         );
-                    $columns = array('Candidate ID', 'Post Name','Photo Id', 'Nepali Name', 'English Name');
-
+                    $columns = array('Candidate ID', 'Post Name', 'Nepali Name', 'English Name');
                     $callback = function() use($candidates, $columns) {
                         $file = fopen('php://output', 'w');
                         fputcsv($file, $columns);
                         foreach ($candidates as $key=>$candidate) {
 
 
-                            $pid = sprintf("%02d",$candidate['post_id']);
-                            $canid = sprintf("%03d",$candidate['id']);
-
-                            $row['Candidate ID']  = $candidate->id;
+                            $row['Candidate ID']  = $candidate->candidate_id;
                             $row['Post Name']    = $candidate->getPosts->post_name;
-                            $row['Photo Id'] = $pid.$canid.".png";
                             $row['Nepali Name']    = $candidate->nepali_name;
                             $row['English Name']  = $candidate->english_name;
-                            fputcsv($file, array($row['Candidate ID'], $row['Post Name'],$row['Photo Id'], $row['Nepali Name'],$row['English Name'],$row['Photo']));
+                            fputcsv($file, array($row['Candidate ID'], $row['Post Name'],$row['Nepali Name'],$row['English Name']));
                         }
 
                         fclose($file);
                     };
                     return response()->stream($callback, 200, $headers);
                 }
-                else
+               
+            } else
                 {
-                    $data = $req->input('name');
-                    $req->session()->flash('wrong');
+// dd($candidatedatum->id);
+                    $postname = Post::find($candidatedatum->id)->post_name;
+                    // dd($postname);
+                    $req->session()->flash('wrong',$postname);
                     return redirect()->back();
                 }
-            }
         }
     }
 

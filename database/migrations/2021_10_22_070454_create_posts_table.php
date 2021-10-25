@@ -15,6 +15,7 @@ class CreatePostsTable extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
+            $table->string('nepali_post_name');
             $table->string('post_name');
             $table->integer('max_count');  
             $table->timestamps();

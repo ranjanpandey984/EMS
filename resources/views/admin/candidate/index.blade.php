@@ -10,7 +10,7 @@
 
                 @if (session('name'))
                 <div class="middle flex-grow-1">
-                    <div class="alert alert-success mb-0 text-white" style="width: 50%" role="alert">
+                    <div class="alert alert-success mb-0 text-white" style="width: 70%" role="alert">
                         <h3>{{session('name')}} has been added.</h3>
                     </div>
                 </div>
@@ -18,7 +18,7 @@
 
                 @if (session('edited'))
                 <div class="middle flex-grow-1">
-                    <div class="alert alert-success mb-0 text-white" style="width: 50%" role="alert">
+                    <div class="alert alert-success mb-0 text-white" style="width: 70%" role="alert">
                         <h3>Updated Successfully.</h3>
                     </div>
                 </div>
@@ -26,8 +26,8 @@
 
                 @if (session('wrong'))
                 <div class="middle flex-grow-1">
-                    <div class="alert alert-success mb-0 text-white" style="width: 50%" role="alert">
-                        <h3>Cannot Export. There are not sufficient candidates in some posts. </h3>
+                    <div class="alert alert-success mb-0 text-white" style="width: 70%" role="alert">
+                        <h3>Cannot Export. There are not sufficient candidates in {{session('wrong')}}. </h3>
                     </div>
                 </div>
                 @endif
@@ -59,7 +59,8 @@
                     @foreach($candidates as $key=>$candidate)
                         <tr>
                             <td>{{ $key+1 }}</td>
-                            <td>{{ sprintf("%03d",$candidate['id'])}}</td>
+                            {{-- <td>{{ sprintf("%03d",$candidate['id'])}}</td> --}}
+                            <td>{{ $candidate->candidate_id }}</td>
                             <td>{{ $candidate->getPosts->post_name }}</td>
                             <td>{{ $candidate['nepali_name'] }}</td>
                             <td>{{ $candidate['english_name'] }}</td>

@@ -19,6 +19,8 @@ class PostController extends Controller
     {
         $post = new Post;
         $post->post_name = $req->input('name');
+        $post->nepali_post_name = $req->input('nepname');
+
         $post->max_count = $req->input('count');
         $post->save();
 
@@ -44,6 +46,8 @@ class PostController extends Controller
     {
         $post = Post::find($req->id);
         $post->post_name = $req->input('name');
+        $post->nepali_post_name = $req->input('nepname');
+
         $post->max_count = $req->input('count');
         $post->save();
 
@@ -65,7 +69,7 @@ class PostController extends Controller
             "Expires"             => "0"
         );
 
-        $columns = array('Post ID', 'Post Name', 'Max Count');
+        $columns = array('Post ID', 'Post Name', 'Nepali Post Name', 'Max Count');
 
         $callback = function() use($posts, $columns) {
             $file = fopen('php://output', 'w');
@@ -74,9 +78,10 @@ class PostController extends Controller
             foreach ($posts as $key=>$post) {
                 $row['Post ID']  = $post->id;
                 $row['Post Name']    = $post->post_name;
+                $row['Nepali Post Name'] = $post->nepali_post_name;
                 $row['Max Count']    = $post->max_count;
 
-                fputcsv($file, array($row['Post ID'], $row['Post Name'], $row['Max Count']));
+                fputcsv($file, array($row['Post ID'], $row['Post Name'], $row['Nepali Post Name'], $row['Max Count']));
             }
 
             fclose($file);

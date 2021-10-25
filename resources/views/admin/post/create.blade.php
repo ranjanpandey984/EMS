@@ -14,8 +14,12 @@
                 @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="exampleInputEmail1">Post Name</label>
+                    <label for="exampleInputEmail1">English Post Name</label>
                     <input type="text" class="form-control" name="name" id="exampleInputEmail1" placeholder="Enter Post Name">
+                  </div>
+                  <div class="form-group">
+                    <label for="exampleInputEmail1">Nepali Post Name</label>
+                    <input type="text" class="form-control" name="nepname" id="exampleInputEmail1" placeholder="Enter Nepali Post Name">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Max Count</label>

@@ -17,8 +17,10 @@ class CreateCandidatesTable extends Migration
             $table->id();
             $table->string('nepali_name');
             $table->string('english_name');
+            $table->integer('cant_id')->nullable();
             $table->unsignedBigInteger('post_id');
-            $table->longtext('image');
+            $table->longtext('image')->nullable();
+            $table->string('candidate_id')->nullable();
             $table->timestamps();
 
             $table->foreign('post_id')->references('id')->on('posts');

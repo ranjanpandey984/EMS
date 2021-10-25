@@ -27,7 +27,7 @@ use App\Http\Controllers\admin\CandidateController;
 */
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return view('admin.layouts.admin_master');
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/', function () {
